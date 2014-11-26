@@ -1,0 +1,28 @@
+
+
+ExampleApp.directive('exWidget2', ['MetadataService', function(MetadataService) {
+
+    return {
+        restrict: 'AE',
+        templateUrl: 'widget2/widget2.html',
+        scope: {},
+        link: function(scope, element, attrs) {
+            scope.crossData = [];
+            scope.entries = [];
+            scope.length = 0;
+
+            scope.$on('init', function() {
+                var data = MetadataService.getData();
+                scope.dimOne = data.dimension(function(d){return d;});
+                scope.all = data.groupAll();
+            });
+
+            scope.$on('filterChanged', function() {
+                console.log('filterChanged in widget2');
+                scope.entries = scope.dimOne.top(40);
+                scope.length = scope.all.value();
+                scope.$apply();
+            });
+        }
+    };
+}]);
